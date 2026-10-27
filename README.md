@@ -1,6 +1,9 @@
 # PlacementGuard AI 1.0
 Android personal WhatsApp notification assistant. Native Android APK required; Expo Go is unsupported.
 
+## Features
+Setup checklist, quick test presets, searchable model list, system health sharing via the Android share sheet. Diagnostics exclude API keys, message contents and contact names.
+
 ## Changes
 Three-tab interface, explicit input colors, key visibility control; serialized auto-save, atomic durable settings commits and no writes before successful hydration. API key encrypted with Android Keystore AES-GCM; legacy settings preserved and automation paused on migration. Backup disabled to avoid restoring ciphertext without its key.
 
