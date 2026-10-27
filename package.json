@@ -1,6 +1,6 @@
 {
   "name": "placementguard-ai",
-  "version": "0.3.0",
+  "version": "1.0.0",
   "private": true,
   "main": "index.js",
   "scripts": {
@@ -8,6 +8,7 @@
     "android": "expo run:android",
     "prebuild": "expo prebuild --clean",
     "doctor": "expo-doctor",
+    "test": "node --experimental-strip-types --test tests/settings.test.mjs",
     "postinstall": "node setup-native.js"
   },
   "dependencies": {

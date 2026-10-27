@@ -4,6 +4,8 @@ module.exports = function withPlacementGuard(config) {
   return withAndroidManifest(config, config => {
     const app = config.modResults.manifest.application?.[0];
     if (!app) return config;
+    app.$['android:allowBackup'] = 'false';
+    app.$['android:usesCleartextTraffic'] = 'false';
     app.service = app.service || [];
     const name = 'expo.modules.placementguard.WhatsAppNotificationListener';
     if (!app.service.some(s => s.$?.['android:name'] === name)) {

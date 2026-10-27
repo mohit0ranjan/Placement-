@@ -2,12 +2,12 @@
   "expo": {
     "name": "PlacementGuard AI",
     "slug": "placementguard-aiplacementguard-ai",
-    "version": "0.3.0",
+    "version": "1.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "light",
     "android": {
       "package": "com.mohit.placementguardai",
-      "versionCode": 3,
+      "versionCode": 4,
       "permissions": [
         "android.permission.INTERNET"
       ]

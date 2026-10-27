@@ -1,21 +1,31 @@
-# PlacementGuard AI — Expo/EAS edition
+# PlacementGuard AI 1.0
+Android personal WhatsApp notification assistant. Native Android APK required; Expo Go is unsupported.
 
-Android-only personal WhatsApp placement auto-responder.
+## Changes
+Three-tab interface, explicit input colors, key visibility control; serialized auto-save, atomic durable settings commits and no writes before successful hydration. API key encrypted with Android Keystore AES-GCM; legacy settings preserved and automation paused on migration. Backup disabled to avoid restoring ciphertext without its key.
 
-## Why it needs an EAS build
-The app contains a Kotlin `NotificationListenerService` to read WhatsApp notifications and use Android notification quick-reply. Expo Go cannot load custom native code. Use an EAS preview/development build.
+Network work runs on an IO coroutine queue. Visible tests, 65-second UI timeout, bounded connection/read timeouts, safe error messages, live model catalog, strict response validation, increased token budget and provider-specific reasoning options. Model changes pause automation. No silent model fallback.
 
-## Phone-only EAS build
-1. Create/login to an Expo account at https://expo.dev.
-2. Put this project in GitHub or another Git source that EAS can access.
-3. In a cloud shell / GitHub Action / terminal environment run `npx eas-cli@latest init` once to replace the placeholder EAS project ID.
-4. Run `npx eas-cli@latest build --platform android --profile preview`.
-5. EAS outputs an installable APK URL.
-6. Install APK, open PlacementGuard AI, grant Notification Access, keep Test Mode on, and use **Test NVIDIA NIM**.
-7. Send placement and personal WhatsApp test messages from another number. Only after verifying logs, turn Test Mode off.
+Bounded notification queue, persistent duplicate suppression and conversation cooldowns; fresh settings rechecked before sending; stale jobs skipped. Notification permission and listener connection tracked separately. New activity entries exclude contact names, message text and keys; context is memory-only for 30 minutes.
 
-## Model
-`meta/llama-3.3-70b-instruct`, temperature 0.2, top_p 0.7, threshold 0.85.
+## Build
+Node 24 recommended. Run `npm ci`, `npm test`, `npx tsc --noEmit`.
+`npx eas-cli build --platform android --profile preview` creates an APK using this existing EAS project's signing credentials. Install the signed update over the existing app. Do not uninstall. Resolve a signing mismatch using the original keystore.
 
-## API key and privacy
-No API key is included in the source or APK. Enter your NVIDIA NIM key in the app after installation. Notification message text and sender names are sent to NVIDIA for classification. Test mode classifies messages but never sends replies. Notification access must be granted explicitly on the phone. Keep test mode on until placement and personal messages have been checked on your device.
+`postinstall` reconstructs local module/shared source/tests from `native-source.json`. Regenerate that manifest after editing reconstructed files. No key or signing credentials are included.
+
+## Setup
+Settings → enter a fresh NVIDIA key → load models/select a chat model → Home → test AI. Grant Android Notification Access. Enable automation in TEST mode first. Recent message context goes to NVIDIA for classification. Exclusions match exact notification names/numbers. Groups are ignored by default.
+
+## Release gates: real-device checks required
+Automated checks do not establish production readiness. Before live use verify:
+1. Save key/model/reply, swipe app away, relaunch; settings persist. Never log or screenshot a key.
+2. Grant/revoke notification permission; verify status after returning.
+3. Test invalid/revoked keys, retired models, airplane mode, timeouts, malformed/empty responses.
+4. Receive positive and negative English/Hindi/Hinglish placement examples from a second WhatsApp account with phone locked. Verify test outcomes and no outbound messages.
+5. Check exclusions, groups, repeated notifications, cooldowns and stale queued jobs.
+6. Explicitly enable LIVE; verify one configured reply, no duplicates and immediate pause.
+7. Repeat after swipe-away, process kill, reboot and battery saving. Android Force Stop prevents services until reopened. Muted/open WhatsApp chats may not produce actionable notifications. Vendor battery restrictions affect delivery.
+8. Install a same-signed upgrade over the old APK; verify migration.
+
+Default model: openai/gpt-oss-20b; verify account access with the app. Free endpoint availability changes. No accuracy or background-delivery guarantee is claimed. This build must pass native compilation and real-device gates before production release.
